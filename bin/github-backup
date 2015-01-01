@@ -26,7 +26,7 @@
 ######################################################################
 # Script version is yymmdd-HHMMSS in UTC, date +%y%m%d-%H%M%S
 ######################################################################
-SCRIPTVERSION=150101-094023
+SCRIPTVERSION=150101-094331
 
 
 APIKEY=
@@ -65,7 +65,7 @@ list_all_repos() {
   fi
   if [ -e .all.repos.git_url.txt ]; then
     cat .all.repos.git_url.txt | while read line ; do
-      echo $line | awk '{print $2}' | awk -F, '{print $1}'
+      echo $line | awk '{print $2}' | awk -F, '{print $1}' | tr -d '"'
     done
   fi
 }
@@ -97,6 +97,8 @@ pull_all_repos() {
   fi
 }
 
-list_all_repos
+########## This is called in clone_all_repos
+#list_all_repos
+
 clone_all_repos
 pull_all_repos
