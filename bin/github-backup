@@ -26,7 +26,7 @@
 ######################################################################
 # Script version is yymmdd-HHMMSS in UTC, date +%y%m%d-%H%M%S
 ######################################################################
-SCRIPTVERSION=150101-091430
+SCRIPTVERSION=150101-093316
 
 
 APIKEY=
@@ -57,7 +57,7 @@ list_all_repos() {
     [ -e user.orgs.repos.git_url.txt ] && rm user.orgs.repos.git_url.txt
     cat user.orgs.repos_url.txt | while read line ; do
       url=`echo $line | awk '{print $2}' | awk -F, '{print $1}'`
-      curl -u ${APIKEY}:x-oauth-basic "$url" | grep git_url >>user.orgs.repos.git_url.txt
+      curl -u ${APIKEY}:x-oauth-basic $url | grep git_url >>user.orgs.repos.git_url.txt
     done
     if [ -e user.orgs.repos.git_url.txt ]; then
       cat user.orgs.repos.git_url.txt >>all.repos.git_url.txt
