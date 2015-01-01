@@ -50,8 +50,21 @@ list_all_repos() {
     curl -u ${APIKEY}:x-oauth-basic https://api.github.com/user/repos | grep git_url >user.repos.git_url.txt
     curl -u ${APIKEY}:x-oauth-basic https://api.github.com/user/orgs | grep repos_url >user.orgs.repos_url.txt
   fi
-  if [ -e user.repos.git_url.txt -a -e user.orgs.repos_url.txt ]; then
-    cat user.repos.git_url.txt user.orgs.repos_url.txt | while read line ; do
+  if [ -e user.repos.git_url.txt ]; then
+    cat user.repos.git_url.txt >>all.repos.git_url.txt
+  fi
+  if [ -e user.orgs.repos_url.txt ]; then
+    [ -e user.orgs.repos.git_url.txt ] && rm user.orgs.repos.git_url.txt
+    cat user.orgs.repos_url.txt | while read line ; do
+      url=`echo $line | awk '{print $2}' | awk -F, '{print $1}'`
+      curl -u ${APIKEY}:x-oauth-basic "$url" | grep git_url >>user.orgs.repos.git_url.txt
+    done
+    if [ -e user.orgs.repos.git_url.txt ]; then
+      cat user.orgs.repos.git_url.txt >>all.repos.git_url.txt
+    fi
+  fi
+  if [ -e all.repos.git_url.txt ]; then
+    cat all.repos.git_url.txt | while read line ; do
       echo $line | awk '{print $2}' | awk -F, '{print $1}'
     done
   fi
