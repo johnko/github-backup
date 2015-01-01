@@ -26,7 +26,7 @@
 ######################################################################
 # Script version is yymmdd-HHMMSS in UTC, date +%y%m%d-%H%M%S
 ######################################################################
-SCRIPTVERSION=150101-093316
+SCRIPTVERSION=150101-093702
 
 
 APIKEY=
@@ -47,24 +47,24 @@ list_all_repos() {
     echo "APIKEY not set."
     exit 1
   else
-    curl -u ${APIKEY}:x-oauth-basic https://api.github.com/user/repos | grep git_url >user.repos.git_url.txt
-    curl -u ${APIKEY}:x-oauth-basic https://api.github.com/user/orgs | grep repos_url >user.orgs.repos_url.txt
+    curl -u ${APIKEY}:x-oauth-basic https://api.github.com/user/repos | grep git_url >.user.repos.git_url.txt
+    curl -u ${APIKEY}:x-oauth-basic https://api.github.com/user/orgs | grep repos_url >.user.orgs.repos_url.txt
   fi
-  if [ -e user.repos.git_url.txt ]; then
-    cat user.repos.git_url.txt >>all.repos.git_url.txt
+  if [ -e .user.repos.git_url.txt ]; then
+    cat .user.repos.git_url.txt >>.all.repos.git_url.txt
   fi
-  if [ -e user.orgs.repos_url.txt ]; then
-    [ -e user.orgs.repos.git_url.txt ] && rm user.orgs.repos.git_url.txt
-    cat user.orgs.repos_url.txt | while read line ; do
-      url=`echo $line | awk '{print $2}' | awk -F, '{print $1}'`
-      curl -u ${APIKEY}:x-oauth-basic $url | grep git_url >>user.orgs.repos.git_url.txt
+  if [ -e .user.orgs.repos_url.txt ]; then
+    [ -e .user.orgs.repos.git_url.txt ] && rm .user.orgs.repos.git_url.txt
+    cat .user.orgs.repos_url.txt | while read line ; do
+      url=`echo $line | awk '{print $2}' | awk -F, '{print $1}' | tr -d '"'`
+      curl -u ${APIKEY}:x-oauth-basic $url | grep git_url >>.user.orgs.repos.git_url.txt
     done
-    if [ -e user.orgs.repos.git_url.txt ]; then
-      cat user.orgs.repos.git_url.txt >>all.repos.git_url.txt
+    if [ -e .user.orgs.repos.git_url.txt ]; then
+      cat .user.orgs.repos.git_url.txt >>.all.repos.git_url.txt
     fi
   fi
-  if [ -e all.repos.git_url.txt ]; then
-    cat all.repos.git_url.txt | while read line ; do
+  if [ -e .all.repos.git_url.txt ]; then
+    cat .all.repos.git_url.txt | while read line ; do
       echo $line | awk '{print $2}' | awk -F, '{print $1}'
     done
   fi
@@ -72,13 +72,13 @@ list_all_repos() {
 
 clone_all_repos() {
   test_for_git
-  [ -e error_cloning.txt ] && rm error_cloning.txt
+  [ -e .error_cloning.txt ] && rm .error_cloning.txt
   list_all_repos | while read line; do
-    git clone $line || echo $line >>error_cloning.txt
+    git clone $line || echo $line >>.error_cloning.txt
   done
-  if [ -e error_cloning.txt ]; then
+  if [ -e .error_cloning.txt ]; then
     echo "Error cloning the following:"
-    cat error_cloning.txt
+    cat .error_cloning.txt
     exit 1
   fi
 }
@@ -87,12 +87,12 @@ pull_all_repos() {
   test_for_git
   parentdir=`pwd`
   find . -maxdepth 1 -type d | while read line; do
-    cd $line && git pull || echo $line >>error_pulling.txt
+    cd $line && git pull || echo $line >>.error_pulling.txt
     cd $parentdir
   done
-  if [ -e error_pulling.txt ]; then
+  if [ -e .error_pulling.txt ]; then
     echo "Error pulling the following:"
-    cat error_pulling.txt
+    cat .error_pulling.txt
     exit 1
   fi
 }
