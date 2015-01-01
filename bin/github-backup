@@ -26,7 +26,7 @@
 ######################################################################
 # Script version is yymmdd-HHMMSS in UTC, date +%y%m%d-%H%M%S
 ######################################################################
-SCRIPTVERSION=150101-093702
+SCRIPTVERSION=150101-094023
 
 
 APIKEY=
@@ -43,7 +43,7 @@ list_all_repos() {
     echo "curl command not found."
     exit 1
   fi
-  if [ -z "${APIKEY}"]; then
+  if [ -z "${APIKEY}" ]; then
     echo "APIKEY not set."
     exit 1
   else
