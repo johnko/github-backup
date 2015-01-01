@@ -26,7 +26,7 @@
 ######################################################################
 # Script version is yymmdd-HHMMSS in UTC, date +%y%m%d-%H%M%S
 ######################################################################
-SCRIPTVERSION=150101-094331
+SCRIPTVERSION=150101-094715
 
 
 APIKEY=
@@ -47,24 +47,24 @@ list_all_repos() {
     echo "APIKEY not set."
     exit 1
   else
-    curl -u ${APIKEY}:x-oauth-basic https://api.github.com/user/repos | grep git_url >.user.repos.git_url.txt
+    curl -u ${APIKEY}:x-oauth-basic https://api.github.com/user/repos | grep clone_url >.user.repos.clone_url.txt
     curl -u ${APIKEY}:x-oauth-basic https://api.github.com/user/orgs | grep repos_url >.user.orgs.repos_url.txt
   fi
-  if [ -e .user.repos.git_url.txt ]; then
-    cat .user.repos.git_url.txt >>.all.repos.git_url.txt
+  if [ -e .user.repos.clone_url.txt ]; then
+    cat .user.repos.clone_url.txt >>.all.repos.clone_url.txt
   fi
   if [ -e .user.orgs.repos_url.txt ]; then
-    [ -e .user.orgs.repos.git_url.txt ] && rm .user.orgs.repos.git_url.txt
+    [ -e .user.orgs.repos.clone_url.txt ] && rm .user.orgs.repos.clone_url.txt
     cat .user.orgs.repos_url.txt | while read line ; do
       url=`echo $line | awk '{print $2}' | awk -F, '{print $1}' | tr -d '"'`
-      curl -u ${APIKEY}:x-oauth-basic $url | grep git_url >>.user.orgs.repos.git_url.txt
+      curl -u ${APIKEY}:x-oauth-basic $url | grep clone_url >>.user.orgs.repos.clone_url.txt
     done
-    if [ -e .user.orgs.repos.git_url.txt ]; then
-      cat .user.orgs.repos.git_url.txt >>.all.repos.git_url.txt
+    if [ -e .user.orgs.repos.clone_url.txt ]; then
+      cat .user.orgs.repos.clone_url.txt >>.all.repos.clone_url.txt
     fi
   fi
-  if [ -e .all.repos.git_url.txt ]; then
-    cat .all.repos.git_url.txt | while read line ; do
+  if [ -e .all.repos.clone_url.txt ]; then
+    cat .all.repos.clone_url.txt | while read line ; do
       echo $line | awk '{print $2}' | awk -F, '{print $1}' | tr -d '"'
     done
   fi
