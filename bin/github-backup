@@ -26,7 +26,7 @@
 ######################################################################
 # Script version is yymmdd-HHMMSS in UTC, date +%y%m%d-%H%M%S
 ######################################################################
-SCRIPTVERSION=150101-094715
+SCRIPTVERSION=150101-100203
 
 
 APIKEY=
@@ -50,6 +50,7 @@ list_all_repos() {
     curl -u ${APIKEY}:x-oauth-basic https://api.github.com/user/repos | grep clone_url >.user.repos.clone_url.txt
     curl -u ${APIKEY}:x-oauth-basic https://api.github.com/user/orgs | grep repos_url >.user.orgs.repos_url.txt
   fi
+  [ -e .all.repos.clone_url.txt ] && rm .all.repos.clone_url.txt
   if [ -e .user.repos.clone_url.txt ]; then
     cat .user.repos.clone_url.txt >>.all.repos.clone_url.txt
   fi
