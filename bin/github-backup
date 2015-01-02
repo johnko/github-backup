@@ -84,7 +84,7 @@ clone_all_repos() {
   fi
 }
 
-pull_all_repos() {
+pull_all_folders() {
   test_for_git
   parentdir=`pwd`
   find . -maxdepth 1 -type d | while read line; do
@@ -102,4 +102,4 @@ pull_all_repos() {
 #list_all_repos
 
 clone_all_repos
-pull_all_repos
+pull_all_folders
