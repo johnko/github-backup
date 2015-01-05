@@ -26,7 +26,7 @@
 ######################################################################
 # Script version is yymmdd-HHMMSS in UTC, date +%y%m%d-%H%M%S
 ######################################################################
-SCRIPTVERSION=150101-100203
+SCRIPTVERSION=150105-031538
 
 
 APIKEY=
@@ -80,7 +80,6 @@ clone_all_repos() {
   if [ -e .error_cloning.txt ]; then
     echo "Error cloning the following:"
     cat .error_cloning.txt
-    exit 1
   fi
 }
 
@@ -94,7 +93,6 @@ pull_all_folders() {
   if [ -e .error_pulling.txt ]; then
     echo "Error pulling the following:"
     cat .error_pulling.txt
-    exit 1
   fi
 }
 
