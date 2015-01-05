@@ -26,7 +26,7 @@
 ######################################################################
 # Script version is yymmdd-HHMMSS in UTC, date +%y%m%d-%H%M%S
 ######################################################################
-SCRIPTVERSION=150105-031538
+SCRIPTVERSION=150105-031846
 
 
 APIKEY=
@@ -86,6 +86,7 @@ clone_all_repos() {
 pull_all_folders() {
   test_for_git
   parentdir=`pwd`
+  [ -e .error_pulling.txt ] && rm .error_pulling.txt
   find . -maxdepth 1 -type d | while read line; do
     cd $line && git pull || echo $line >>.error_pulling.txt
     cd $parentdir
